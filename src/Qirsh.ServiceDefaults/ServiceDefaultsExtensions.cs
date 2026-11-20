@@ -55,7 +55,8 @@ public static class ServiceDefaultsExtensions
             .WithTracing(t => t
                 .AddAspNetCoreInstrumentation(o => o.Filter = ctx => !ctx.Request.Path.StartsWithSegments("/health"))
                 .AddHttpClientInstrumentation()
-                .AddSource("MassTransit", "Npgsql"));
+                .AddSource("MassTransit", "Npgsql")
+                .SetSampler(new ParentBasedSampler(new SkipBackgroundClientSpans())));
 
         // Export only when an OTLP collector (e.g. the Aspire dashboard) is configured.
         if (!string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
