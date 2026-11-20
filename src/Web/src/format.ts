@@ -33,6 +33,13 @@ export function alertText(category: string, threshold: number, spent: number, li
     : `${category} is at ${threshold}% of its budget: ${money(spent, currency)} of ${money(limit, currency)}`
 }
 
+const cadenceLabels: Record<string, string> = { Weekly: 'week', Monthly: 'month', Quarterly: 'quarter', Yearly: 'year' }
+
+/** "EGP 100.00 / month" for a recurring payment. */
+export function perCadence(amount: number, cadence: string, currency = 'EGP'): string {
+  return `${money(amount, currency)} / ${cadenceLabels[cadence] ?? cadence.toLowerCase()}`
+}
+
 export function intakeSummary(recorded: number, duplicates: number, skipped: number): string {
   const parts = [`${recorded} recorded`]
   if (duplicates) parts.push(`${duplicates} already known`)

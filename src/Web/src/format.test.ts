@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { alertText, barWidth, budgetTone, intakeSummary, money, monthKey, signedMoney } from './format'
+import { alertText, barWidth, budgetTone, intakeSummary, money, monthKey, perCadence, signedMoney } from './format'
 
 describe('format', () => {
   it('formats money with two decimals and grouping', () => {
@@ -10,6 +10,11 @@ describe('format', () => {
   it('signs money by direction', () => {
     expect(signedMoney(10, 'Out')).toBe('−EGP 10.00')
     expect(signedMoney(10, 'In')).toBe('+EGP 10.00')
+  })
+
+  it('labels a recurring amount by its cadence', () => {
+    expect(perCadence(100, 'Monthly')).toBe('EGP 100.00 / month')
+    expect(perCadence(950, 'Yearly', 'USD')).toBe('USD 950.00 / year')
   })
 
   it('builds a month key', () => {

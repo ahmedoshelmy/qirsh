@@ -14,6 +14,7 @@ export default defineConfig({
       '/api/transactions': ledger,
       '/api/categories': ledger,
       '/api/rules': ledger,
+      '/api/recurring': ledger,
       '/api/budgets': budgets,
       '/hubs': { target: budgets, ws: true },
     },

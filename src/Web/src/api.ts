@@ -29,6 +29,17 @@ export interface BudgetRow {
   alertedThreshold: number
 }
 
+export interface RecurringPayment {
+  merchant: string
+  cadence: 'Weekly' | 'Monthly' | 'Quarterly' | 'Yearly'
+  typicalAmount: number
+  currency: string
+  occurrences: number
+  lastPaidOn: string
+  nextExpectedOn: string
+  isOverdue: boolean
+}
+
 export interface IntakeItem {
   index: number
   status: 'Recorded' | 'Duplicate' | 'Skipped'
@@ -67,6 +78,7 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 export const api = {
   transactions: (month: string) => request<TransactionRow[]>(`/api/transactions?month=${month}&take=200`),
   categories: () => request<Category[]>('/api/categories'),
+  recurring: () => request<RecurringPayment[]>('/api/recurring'),
   budgets: (month: string) => request<BudgetRow[]>(`/api/budgets?month=${month}`),
   pasteSms: (text: string) => request<IntakeResponse>('/api/sms', { method: 'POST', body: JSON.stringify({ text }) }),
   recategorise: (id: string, category: string) =>

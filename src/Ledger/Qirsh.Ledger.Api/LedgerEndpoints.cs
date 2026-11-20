@@ -19,6 +19,10 @@ public static class LedgerEndpoints
 
         api.MapPut("/transactions/{id:guid}/category", RecategoriseAsync).WithTags("Transactions");
 
+        api.MapGet("/recurring", async (DetectRecurringPayments handler, CancellationToken ct) =>
+            Results.Ok(await handler.HandleAsync(ct)))
+            .WithTags("Transactions");
+
         api.MapGet("/categories", async (ILedgerQueries queries, CancellationToken ct) =>
             Results.Ok(await queries.ListCategoriesAsync(ct)))
             .WithTags("Categories");

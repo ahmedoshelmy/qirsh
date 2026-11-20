@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.AddServiceDatabase<LedgerDbContext>(LedgerDbContext.Schema);
 builder.AddQirshMessaging<LedgerDbContext>(x => x.AddConsumer<SmsParsedConsumer>());
-builder.Services.AddLedgerApplication().AddLedgerInfrastructure();
+builder.Services.AddLedgerApplication(builder.Configuration["Qirsh:TimeZone"]).AddLedgerInfrastructure();
 builder.Services.AddGrpc();
 
 var app = builder.Build();

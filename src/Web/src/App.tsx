@@ -4,6 +4,7 @@ import type { BudgetAlert } from './api'
 import { Budgets } from './Budgets'
 import { alertText, monthKey } from './format'
 import { PasteBox } from './PasteBox'
+import { Recurring } from './Recurring'
 import { Transactions } from './Transactions'
 import { useBudgetAlerts } from './useBudgetAlerts'
 
@@ -43,6 +44,7 @@ export function App() {
       <main className="grid">
         <PasteBox />
         <Budgets month={month} />
+        <Recurring />
         <Transactions month={month} />
       </main>
       <div className="toasts" role="status" aria-live="polite">

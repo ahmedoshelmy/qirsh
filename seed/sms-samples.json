@@ -146,6 +146,30 @@
       "text": "NBE: Cash withdrawal of EGP 2,000.00 from ATM using card ending 4821 on {date-6}"
     },
     {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 100.00 at SHAHID VIP on {date-3}. Avail Bal EGP 3,410.00"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 100.00 at SHAHID VIP on {date-33}. Avail Bal EGP 3,410.00"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 100.00 at SHAHID VIP on {date-63}. Avail Bal EGP 3,410.00"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 950.00 at GOLDS GYM using card ending 3307 on {date-12}."
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 950.00 at GOLDS GYM using card ending 3307 on {date-42}."
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 950.00 at GOLDS GYM using card ending 3307 on {date-72}."
+    },
+    {
       "sender": "Fawry",
       "text": "Fawry: paid 320.00 EGP for WE INTERNET ref 7712"
     },

@@ -48,4 +48,5 @@ done
 echo "groceries budget spent: $spent"
 python3 -c "import sys; sys.exit(0 if float('$spent') > 0 else 1)" || { echo "SMOKE FAIL: budget not updated"; exit 1; }
 printf 'web proxy -> '; curl -fsS "$WEB/api/budgets?month=$month" | head -c 120; echo
+printf 'recurring via web proxy -> '; curl -fsS "$WEB/api/recurring" | head -c 120; echo
 echo "SMOKE PASS"

@@ -40,4 +40,10 @@ internal sealed class LedgerQueries(LedgerDbContext db) : ILedgerQueries
         var spend = await rows.Select(t => new { t.Id, t.Amount }).ToListAsync(ct);
         return new MonthSpend(spend.Sum(t => t.Amount), [.. spend.Select(t => t.Id)]);
     }
+
+    public async Task<IReadOnlyList<Payment>> ListOutgoingPaymentsSinceAsync(DateOnly since, CancellationToken ct) =>
+        await db.Transactions.AsNoTracking()
+            .Where(t => t.Direction == Direction.Out && t.MerchantKey != null && t.OccurredOn >= since)
+            .Select(t => new Payment(t.MerchantKey!, t.Merchant ?? t.MerchantKey!, t.Amount, t.Currency, t.OccurredOn))
+            .ToListAsync(ct);
 }

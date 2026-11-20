@@ -1,3 +1,5 @@
+using Qirsh.Ledger.Domain;
+
 namespace Qirsh.Ledger.Application;
 
 public sealed record TransactionView(
@@ -28,4 +30,7 @@ public interface ILedgerQueries
     Task<IReadOnlyList<MerchantRuleView>> ListRulesAsync(CancellationToken ct);
 
     Task<MonthSpend> GetMonthSpendAsync(string category, DateOnly monthStart, string currency, CancellationToken ct);
+
+    /// <summary>Money out to a known merchant on or after <paramref name="since"/>.</summary>
+    Task<IReadOnlyList<Payment>> ListOutgoingPaymentsSinceAsync(DateOnly since, CancellationToken ct);
 }

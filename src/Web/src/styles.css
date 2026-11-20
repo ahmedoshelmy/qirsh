@@ -63,7 +63,7 @@ h2 { font-size: 1.05rem; margin-bottom: 0.5rem; }
   padding: 0.5rem 1rem 3rem;
 }
 
-.transactions { grid-column: 1 / -1; }
+.transactions, .recurring { grid-column: 1 / -1; }
 
 @media (max-width: 760px) {
   .grid { grid-template-columns: 1fr; }
