@@ -5,7 +5,7 @@ WORKDIR /src
 COPY global.json Directory.Build.props Directory.Packages.props .editorconfig ./
 COPY src/ src/
 COPY seed/ seed/
-RUN --mount=type=cache,id=qirsh-nuget,target=/root/.nuget/packages \
+RUN --mount=type=cache,id=qirsh-nuget,target=/root/.nuget/packages,sharing=locked \
     dotnet publish src/${SERVICE}/Qirsh.${SERVICE}.Api/Qirsh.${SERVICE}.Api.csproj -c Release -o /app \
       -p:UseAppHost=false -nodeReuse:false -p:UseSharedCompilation=false
 
