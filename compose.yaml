@@ -1,0 +1,146 @@
+name: qirsh
+
+x-dotnet-service: &dotnet-service
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  depends_on:
+    postgres: { condition: service_healthy }
+    rabbitmq: { condition: service_healthy }
+  deploy:
+    resources:
+      limits:
+        memory: 256m
+
+x-dotnet-env: &dotnet-env
+  ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=qirsh;Username=${POSTGRES_USER:-qirsh};Password=${POSTGRES_PASSWORD:-qirsh}
+  ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER:-qirsh}:${RABBITMQ_PASSWORD:-qirsh}@rabbitmq:5672/
+  Messaging__Transport: RabbitMq
+  OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: qirsh
+      POSTGRES_USER: ${POSTGRES_USER:-qirsh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qirsh}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d qirsh"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-qirsh}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-qirsh}
+    ports:
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 384m
+
+  ingestion:
+    <<: *dotnet-service
+    build:
+      context: .
+      args: { SERVICE: Ingestion }
+    image: qirsh-ingestion
+    environment:
+      <<: *dotnet-env
+      Qirsh__SeedDemoData: ${QIRSH_DEMO_DATA:-false}
+    ports:
+      - "5101:5101"
+      - "5102:5102"
+    healthcheck:
+      test: ["CMD-SHELL", "dotnet \"$$ASSEMBLY\" --probe http://localhost:5101/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  ledger:
+    <<: *dotnet-service
+    build:
+      context: .
+      args: { SERVICE: Ledger }
+    image: qirsh-ledger
+    environment:
+      <<: *dotnet-env
+    ports:
+      - "5201:5201"
+    healthcheck:
+      test: ["CMD-SHELL", "dotnet \"$$ASSEMBLY\" --probe http://localhost:5201/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  budgets:
+    <<: *dotnet-service
+    build:
+      context: .
+      args: { SERVICE: Budgets }
+    image: qirsh-budgets
+    environment:
+      <<: *dotnet-env
+      Services__LedgerGrpc: http://ledger:5202
+    ports:
+      - "5301:5301"
+    healthcheck:
+      test: ["CMD-SHELL", "dotnet \"$$ASSEMBLY\" --probe http://localhost:5301/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+
+  web:
+    build: src/Web
+    image: qirsh-web
+    depends_on:
+      ingestion: { condition: service_healthy }
+      ledger: { condition: service_healthy }
+      budgets: { condition: service_healthy }
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    deploy:
+      resources:
+        limits:
+          memory: 64m
+
+  # Traces, metrics and logs: docker compose --profile obs up, then set OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire-dashboard:18889
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.5
+    profiles: [obs]
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+    ports:
+      - "18888:18888"
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+
+volumes:
+  pgdata:
