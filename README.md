@@ -1,5 +1,13 @@
 # Qirsh
 
+[![CI](https://github.com/ahmedoshelmy/qirsh/actions/workflows/ci.yml/badge.svg)](https://github.com/ahmedoshelmy/qirsh/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![.NET 10](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![MassTransit + gRPC](https://img.shields.io/badge/MassTransit-gRPC-555)](#architecture)
+[![React + TypeScript](https://img.shields.io/badge/React-TypeScript-3178C6?logo=typescript&logoColor=white)](src/Web)
+
+Part of the [systems portfolio](https://github.com/ahmedoshelmy/systems-portfolio).
+
 **Egyptian bank and wallet SMS → a clean ledger → monthly budgets with live alerts.**
 
 Egyptian banks and wallets tell you about every payment by SMS, in English or Arabic, in a dozen formats.
