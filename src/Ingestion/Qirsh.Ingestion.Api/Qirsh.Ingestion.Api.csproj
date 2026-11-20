@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\Qirsh.Ingestion.Infrastructure\Qirsh.Ingestion.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Qirsh.ServiceDefaults\Qirsh.ServiceDefaults.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\Qirsh.Contracts\protos\sms_parser.proto" GrpcServices="Server" Link="Protos\sms_parser.proto" />
+  </ItemGroup>
+</Project>
