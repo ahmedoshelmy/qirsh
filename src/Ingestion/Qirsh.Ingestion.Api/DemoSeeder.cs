@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Qirsh.Ingestion.Infrastructure;
 
@@ -9,7 +10,7 @@ namespace Qirsh.Ingestion.Api;
 /// Development only (Qirsh:SeedDemoData=true): on an empty database, feeds the invented messages in
 /// seed/sms-samples.json through the normal intake, so the whole pipeline fills the demo screens.
 /// </summary>
-public static class DemoSeeder
+public static partial class DemoSeeder
 {
     private sealed record SampleFile(List<Sample> Messages);
 
@@ -23,33 +24,31 @@ public static class DemoSeeder
             return;
         }
 
+        var ct = app.Lifetime.ApplicationStopping;
         await using var scope = app.Services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<IngestionDbContext>();
-        if (await db.RawMessages.AnyAsync())
+        if (await db.RawMessages.AnyAsync(ct))
         {
             return;
         }
 
         await using var stream = typeof(DemoSeeder).Assembly.GetManifestResourceStream("sms-samples.json")
             ?? throw new InvalidOperationException("sms-samples.json is not embedded.");
-        var file = await JsonSerializer.DeserializeAsync<SampleFile>(stream, JsonSerializerOptions.Web);
+        var file = await JsonSerializer.DeserializeAsync<SampleFile>(stream, JsonSerializerOptions.Web, ct);
         var intake = scope.ServiceProvider.GetRequiredService<SmsIntake>();
         var today = scope.ServiceProvider.GetRequiredService<BusinessCalendar>().Today();
         foreach (var sample in file?.Messages ?? [])
         {
-            await intake.IngestAsync(WithDates(sample.Text, today), sample.Sender, CancellationToken.None);
+            await intake.IngestAsync(WithDates(sample.Text, today), sample.Sender, ct);
         }
 
         app.Logger.LogInformation("Seeded {Count} demo messages", file?.Messages.Count ?? 0);
     }
 
-    private static string WithDates(string text, DateOnly today)
-    {
-        for (var days = 0; days <= 31; days++)
-        {
-            text = text.Replace($"{{date-{days}}}", today.AddDays(-days).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture), StringComparison.Ordinal);
-        }
+    private static string WithDates(string text, DateOnly today) =>
+        DatePlaceholder().Replace(text, m =>
+            today.AddDays(-int.Parse(m.Groups[1].Value, CultureInfo.InvariantCulture)).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
 
-        return text;
-    }
+    [GeneratedRegex(@"\{date-(\d{1,3})\}")]
+    private static partial Regex DatePlaceholder();
 }

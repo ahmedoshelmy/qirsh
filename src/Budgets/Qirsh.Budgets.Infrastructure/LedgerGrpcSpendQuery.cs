@@ -7,7 +7,7 @@ using Qirsh.Ledger.Grpc;
 namespace Qirsh.Budgets.Infrastructure;
 
 /// <summary>gRPC call to the ledger with a deadline; any failure degrades to "unknown" (null) instead of failing the request.</summary>
-internal sealed class LedgerGrpcSpendQuery(LedgerQuery.LedgerQueryClient client, ILogger<LedgerGrpcSpendQuery> logger) : ILedgerSpendQuery
+internal sealed class LedgerGrpcSpendQuery(LedgerQuery.LedgerQueryClient client, TimeProvider clock, ILogger<LedgerGrpcSpendQuery> logger) : ILedgerSpendQuery
 {
     private static readonly TimeSpan Deadline = TimeSpan.FromSeconds(3);
 
@@ -17,7 +17,7 @@ internal sealed class LedgerGrpcSpendQuery(LedgerQuery.LedgerQueryClient client,
         {
             var reply = await client.GetMonthSpendAsync(
                 new MonthSpendRequest { Category = category, Month = month.ToString("yyyy-MM", CultureInfo.InvariantCulture), Currency = currency },
-                deadline: DateTime.UtcNow.Add(Deadline),
+                deadline: clock.GetUtcNow().UtcDateTime.Add(Deadline),
                 cancellationToken: ct);
             return new LedgerSpend(
                 decimal.Parse(reply.Spent, NumberStyles.Number, CultureInfo.InvariantCulture),
