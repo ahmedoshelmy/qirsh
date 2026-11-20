@@ -9,6 +9,8 @@ live alert to the browser when a category crosses 80% or 100%. Self-hosted, free
 
 *(Qirsh — قرش — is the Egyptian word for a piaster, and for money in general.)*
 
+![Qirsh web: paste box, budgets at ok / 80% / over, recurring payments and the ledger (invented demo data)](docs/images/qirsh-web.png)
+
 ## What it does
 
 - **Bilingual SMS grammar** – CIB, NBE, QNB, Banque Misr, Banque du Caire, AAIB, HSBC, InstaPay, Vodafone Cash,
@@ -19,6 +21,8 @@ live alert to the browser when a category crosses 80% or 100%. Self-hosted, free
   payment to that merchant is filed the same way.
 - **Budgets with alerts** – 80% and 100% thresholds, each announced once per month, pushed over SignalR.
 - **Mid-month budgets** are back-filled from the ledger over gRPC.
+- **Recurring payments** – subscriptions and bills found in the ledger (same merchant, steady weekly / monthly /
+  quarterly / yearly rhythm, amount within 15%), with the next expected date and an overdue flag.
 
 ## Architecture
 
@@ -66,12 +70,12 @@ Requirements: Docker (or Podman with the Docker CLI).
 ```bash
 cp .env.example .env            # optional: change passwords
 docker compose up -d --build --wait
-open http://localhost:8080      # paste an SMS, add a budget
+# open http://localhost:8080 and paste an SMS, add a budget
 ./scripts/smoke.sh              # end-to-end check from the command line
 docker compose down -v
 ```
 
-Demo data: set `QIRSH_DEMO_DATA=true` in `.env` before the first start to ingest the 40 invented messages in
+Demo data: set `QIRSH_DEMO_DATA=true` in `.env` before the first start to ingest the 46 invented messages in
 `seed/sms-samples.json`. Traces: `docker compose --profile obs up -d` with
 `OTEL_EXPORTER_OTLP_ENDPOINT=http://aspire-dashboard:18889`, then open http://localhost:18888.
 
@@ -104,6 +108,7 @@ POST /api/sms                     { "text": "CIB: Your card ****4821 was charged
 POST /api/sms/preview             parse only, nothing stored
 GET  /api/transactions?month=2026-11
 PUT  /api/transactions/{id}/category   { "category": "Shopping" }     -> learns the merchant
+GET  /api/recurring               subscriptions and bills, next expected date
 GET  /api/categories · POST /api/categories · GET /api/rules
 GET  /api/budgets?month=2026-11 · POST /api/budgets { "category": "Groceries", "limit": 4000 }
 PUT  /api/budgets/{id}/limit
@@ -112,7 +117,7 @@ WS   /hubs/alerts                 server -> client "budgetAlert"
 
 Errors are RFC 7807 `ProblemDetails`. `/health/live` and `/health/ready` (database + broker) on every service.
 
-## Design notes (talking points)
+## Interview talking points (design notes)
 
 1. **Why an outbox.** A crash between `SaveChanges()` and `Publish()` either loses a money event or, with naive
    retries, sends it twice. The EF Core transactional outbox makes the publish part of the same database
@@ -132,7 +137,10 @@ Errors are RFC 7807 `ProblemDetails`. `/health/live` and `/health/ready` (databa
 5. **A real bug found by a real test.** MassTransit caches outbox lock SQL per entity type in a static map; with
    schema-per-service and several services in one test process the first schema won and other services polled the
    wrong table. The Testcontainers test caught it; the fix is one option, documented in ADR 2.
-6. **Transport switch.** `Messaging__Transport=RabbitMq|AzureServiceBus` — same consumers, same outbox; RabbitMQ
+6. **Recurring payments without a scheduler.** Detection is a pure domain function over the read side
+   (group by merchant + currency, gaps must all fit one cadence window, amounts within 15% of the median), run
+   on request. No new tables, no background job, nothing to keep in sync — and every rule is a unit test.
+7. **Transport switch.** `Messaging__Transport=RabbitMq|AzureServiceBus` — same consumers, same outbox; RabbitMQ
    locally, Service Bus in Azure.
 
 ## Azure (optional)
@@ -145,7 +153,7 @@ entry, and the images need pushing to a registry first.
 ## Status
 
 MVP. Single user, no authentication (self-hosted on your own machine or network). Stretch ideas: YARP gateway,
-Android companion that reads SMS and calls the gRPC intake, recurring-payment detector, optional free-LLM
+Android companion that reads SMS and calls the gRPC intake, optional free-LLM
 categoriser for merchants no rule knows (off by default), CSV export.
 
 Known limits: two genuinely identical SMS (same text, same balance) are treated as one; amounts in other
