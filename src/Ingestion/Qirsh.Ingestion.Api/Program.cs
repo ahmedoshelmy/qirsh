@@ -3,6 +3,8 @@ using Qirsh.Ingestion.Api;
 using Qirsh.Ingestion.Infrastructure;
 using Qirsh.ServiceDefaults;
 
+await HealthProbe.RunIfRequestedAsync(args);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -19,4 +21,5 @@ app.MapSmsEndpoints();
 app.MapGrpcService<SmsParserGrpcService>();
 
 await app.MigrateDatabaseAsync<IngestionDbContext>();
+await app.SeedDemoDataAsync();
 await app.RunAsync();

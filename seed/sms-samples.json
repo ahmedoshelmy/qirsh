@@ -1,0 +1,165 @@
+{
+  "_note": "Invented messages for demos and tests. {date-N} is replaced with today minus N days (dd/MM/yyyy). Not real SMS.",
+  "messages": [
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 430.00 at CARREFOUR MAADI on {date-0}. Avail Bal EGP 4,520.75"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 850.00 جنيه من بطاقتكم المنتهية ب 4821 لدى TALABAT EGYPT بتاريخ {date-1}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 60.00 at UBER TRIP using card ending 3307 on {date-2}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 75.00 debited at SPINNEYS ZAYED on {date-3}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 45.00 at NETFLIX on {date-4}. Avail Bal EGP 6,000.00"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 150.00 جنيه من بطاقتكم المنتهية ب 4821 لدى SEOUDI MARKET بتاريخ {date-5}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 60.00 at CAREEM RIDE using card ending 3307 on {date-6}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 1,250.00 debited at IKEA CFC on {date-7}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 215.40 at COSTA COFFEE ZAMALEK on {date-8}. Avail Bal EGP 2,100.00"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 1,250.00 جنيه من بطاقتكم المنتهية ب 4821 لدى SHELL OUT ZAYED بتاريخ {date-9}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 75.00 at ELMENUS using card ending 3307 on {date-10}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 45.00 debited at NOON EG on {date-11}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 850.00 at BTECH NASR CITY on {date-12}. Avail Bal EGP 2,100.00"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 215.40 جنيه من بطاقتكم المنتهية ب 4821 لدى SPOTIFY بتاريخ {date-13}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 89.50 at EZABY PHARMACY using card ending 3307 on {date-14}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 1,250.00 debited at METRO MARKET DOKKI on {date-15}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 75.00 at AMAZON EG on {date-16}. Avail Bal EGP 6,000.00"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 320.00 جنيه من بطاقتكم المنتهية ب 4821 لدى SWVL بتاريخ {date-17}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 120.00 at STEAM using card ending 3307 on {date-18}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 150.00 debited at KIOSK 9 on {date-19}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 75.00 at CARREFOUR MAADI on {date-0}. Avail Bal EGP 6,000.00"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 60.00 جنيه من بطاقتكم المنتهية ب 4821 لدى TALABAT EGYPT بتاريخ {date-1}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 45.00 at UBER TRIP using card ending 3307 on {date-2}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 150.00 debited at SPINNEYS ZAYED on {date-3}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 1,250.00 at NETFLIX on {date-4}. Avail Bal EGP 8,420.50"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 1,875.00 جنيه من بطاقتكم المنتهية ب 4821 لدى SEOUDI MARKET بتاريخ {date-5}"
+    },
+    {
+      "sender": "QNB",
+      "text": "QNB ALAHLI: Purchase of EGP 1,875.00 at CAREEM RIDE using card ending 3307 on {date-6}."
+    },
+    {
+      "sender": "BanqueMisr",
+      "text": "Banque Misr: L.E 320.00 debited at IKEA CFC on {date-7}"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your card ****4821 was charged EGP 120.00 at COSTA COFFEE ZAMALEK on {date-8}. Avail Bal EGP 4,520.75"
+    },
+    {
+      "sender": "NBE",
+      "text": "البنك الأهلي المصري: تم خصم مبلغ 60.00 جنيه من بطاقتكم المنتهية ب 4821 لدى SHELL OUT ZAYED بتاريخ {date-9}"
+    },
+    {
+      "sender": "InstaPay",
+      "text": "InstaPay: You sent EGP 2,000.00 to 010****1234 on {date-2}. Ref 88213"
+    },
+    {
+      "sender": "InstaPay",
+      "text": "InstaPay: You received EGP 750.00 from SARA M via IPN on {date-4}"
+    },
+    {
+      "sender": "VF-Cash",
+      "text": "Vodafone Cash: تم استلام مبلغ 300 جنيه من رقم 010****1234. رصيدك الحالي 1,045.20 جنيه"
+    },
+    {
+      "sender": "VF-Cash",
+      "text": "Vodafone Cash: EGP 150.00 transferred to 010****5678 successfully. Balance: EGP 895.20"
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Your account ****4821 has been credited with EGP 9,500.00 Salary on {date-1}. Avail Bal EGP 11,230.00"
+    },
+    {
+      "sender": "NBE",
+      "text": "NBE: Cash withdrawal of EGP 2,000.00 from ATM using card ending 4821 on {date-6}"
+    },
+    {
+      "sender": "Fawry",
+      "text": "Fawry: paid 320.00 EGP for WE INTERNET ref 7712"
+    },
+    {
+      "sender": "CIB",
+      "text": "Your OTP for the purchase of EGP 499.00 at NOON is 482913. Do not share it."
+    },
+    {
+      "sender": "CIB",
+      "text": "CIB: Transaction of EGP 3,200.00 at IKEA CFC was declined due to insufficient funds."
+    },
+    {
+      "sender": "Etisalat",
+      "text": "The available balance in etisalat money wallet is 160.09EGP."
+    }
+  ]
+}

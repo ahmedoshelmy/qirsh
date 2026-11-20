@@ -8,6 +8,9 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\..\..\seed\sms-samples.json" LogicalName="sms-samples.json" Link="seed\sms-samples.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Protobuf Include="..\..\Qirsh.Contracts\protos\sms_parser.proto" GrpcServices="Server" Link="Protos\sms_parser.proto" />
   </ItemGroup>
 </Project>

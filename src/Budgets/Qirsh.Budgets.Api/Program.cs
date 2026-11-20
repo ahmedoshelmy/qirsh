@@ -3,6 +3,8 @@ using Qirsh.Budgets.Application;
 using Qirsh.Budgets.Infrastructure;
 using Qirsh.ServiceDefaults;
 
+await HealthProbe.RunIfRequestedAsync(args);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
