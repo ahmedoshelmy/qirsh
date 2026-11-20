@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Ingestion\Qirsh.Ingestion.Infrastructure\Qirsh.Ingestion.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Ledger\Qirsh.Ledger.Infrastructure\Qirsh.Ledger.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Budgets\Qirsh.Budgets.Infrastructure\Qirsh.Budgets.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

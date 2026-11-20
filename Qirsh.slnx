@@ -1,11 +1,29 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Qirsh.Contracts/Qirsh.Contracts.csproj" />
+    <Project Path="src/Qirsh.ServiceDefaults/Qirsh.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/src/Ingestion/">
     <Project Path="src/Ingestion/Qirsh.Ingestion.Domain/Qirsh.Ingestion.Domain.csproj" />
+    <Project Path="src/Ingestion/Qirsh.Ingestion.Infrastructure/Qirsh.Ingestion.Infrastructure.csproj" />
+    <Project Path="src/Ingestion/Qirsh.Ingestion.Api/Qirsh.Ingestion.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Ledger/">
+    <Project Path="src/Ledger/Qirsh.Ledger.Domain/Qirsh.Ledger.Domain.csproj" />
+    <Project Path="src/Ledger/Qirsh.Ledger.Application/Qirsh.Ledger.Application.csproj" />
+    <Project Path="src/Ledger/Qirsh.Ledger.Infrastructure/Qirsh.Ledger.Infrastructure.csproj" />
+    <Project Path="src/Ledger/Qirsh.Ledger.Api/Qirsh.Ledger.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Budgets/">
+    <Project Path="src/Budgets/Qirsh.Budgets.Domain/Qirsh.Budgets.Domain.csproj" />
+    <Project Path="src/Budgets/Qirsh.Budgets.Application/Qirsh.Budgets.Application.csproj" />
+    <Project Path="src/Budgets/Qirsh.Budgets.Infrastructure/Qirsh.Budgets.Infrastructure.csproj" />
+    <Project Path="src/Budgets/Qirsh.Budgets.Api/Qirsh.Budgets.Api.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Qirsh.ArchitectureTests/Qirsh.ArchitectureTests.csproj" />
+    <Project Path="tests/Qirsh.Budgets.UnitTests/Qirsh.Budgets.UnitTests.csproj" />
     <Project Path="tests/Qirsh.Ingestion.UnitTests/Qirsh.Ingestion.UnitTests.csproj" />
+    <Project Path="tests/Qirsh.Ledger.UnitTests/Qirsh.Ledger.UnitTests.csproj" />
   </Folder>
 </Solution>
