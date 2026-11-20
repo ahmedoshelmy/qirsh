@@ -27,7 +27,9 @@ public static class MessagingExtensions
             x.SetKebabCaseEndpointNameFormatter();
             x.AddEntityFrameworkOutbox<TDbContext>(o =>
             {
-                o.UsePostgres();
+                // MassTransit caches lock SQL per entity type in a static map; with one schema per service and
+                // several services in one process (integration tests) the first schema would win. Resolve per context.
+                o.UsePostgres(enableSchemaCaching: false);
                 o.UseBusOutbox();
                 o.QueryDelay = options.OutboxQueryDelay;
             });
@@ -50,7 +52,16 @@ public static class MessagingExtensions
             {
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(new Uri(Required(builder.Configuration, "RabbitMq")));
+                    var uri = new Uri(Required(builder.Configuration, "RabbitMq"));
+                    var credentials = Uri.UnescapeDataString(uri.UserInfo).Split(':', 2);
+                    cfg.Host(uri, h =>
+                    {
+                        if (credentials is [var user, var password])
+                        {
+                            h.Username(user);
+                            h.Password(password);
+                        }
+                    });
                     cfg.ConfigureEndpoints(context);
                 });
             }
