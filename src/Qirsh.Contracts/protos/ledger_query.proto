@@ -21,4 +21,6 @@ message MonthSpendReply {
   // Decimal as an invariant string.
   string spent = 1;
   int32 transaction_count = 2;
+  // The transactions included, so the caller can ignore their TransactionRecorded events if they arrive later.
+  repeated string transaction_ids = 3;
 }
