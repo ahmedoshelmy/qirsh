@@ -24,6 +24,7 @@
     <Project Path="tests/Qirsh.ArchitectureTests/Qirsh.ArchitectureTests.csproj" />
     <Project Path="tests/Qirsh.Budgets.UnitTests/Qirsh.Budgets.UnitTests.csproj" />
     <Project Path="tests/Qirsh.Ingestion.UnitTests/Qirsh.Ingestion.UnitTests.csproj" />
+    <Project Path="tests/Qirsh.IntegrationTests/Qirsh.IntegrationTests.csproj" />
     <Project Path="tests/Qirsh.Ledger.UnitTests/Qirsh.Ledger.UnitTests.csproj" />
   </Folder>
 </Solution>
