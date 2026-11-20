@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\Qirsh.Budgets.Infrastructure\Qirsh.Budgets.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Qirsh.ServiceDefaults\Qirsh.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>
