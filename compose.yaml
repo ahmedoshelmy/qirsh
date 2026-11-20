@@ -43,10 +43,14 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-qirsh}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-qirsh}
+    volumes:
+      - rabbitdata:/var/lib/rabbitmq
     ports:
       - "15672:15672"
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "check_port_connectivity"]
+      # Not rabbitmq-diagnostics: run as root before the broker is up, the CLI writes a root-owned Erlang cookie
+      # that the broker then cannot read. The management listener only opens once the broker has booted.
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1:15672/ || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 20
@@ -144,3 +148,4 @@ services:
 
 volumes:
   pgdata:
+  rabbitdata:
