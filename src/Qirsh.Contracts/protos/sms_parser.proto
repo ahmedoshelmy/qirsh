@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option csharp_namespace = "Qirsh.Ingestion.Grpc";
+
+package qirsh.ingestion.v1;
+
+// Parses bank / wallet SMS without storing them (previews, the Android companion).
+service SmsParser {
+  rpc Parse (ParseRequest) returns (ParsedSms);
+  rpc ParseBatch (ParseBatchRequest) returns (ParseBatchReply);
+}
+
+message ParseRequest {
+  string text = 1;
+  // SMS sender id, used when the text does not name the bank.
+  string sender = 2;
+}
+
+message ParseBatchRequest {
+  // A paste of one or more messages, separated by blank lines.
+  string paste = 1;
+}
+
+message ParsedSms {
+  bool ok = 1;
+  // otp | declined | no_amount | no_direction, empty when ok.
+  string skip = 2;
+  string bank = 3;
+  // out | in
+  string direction = 4;
+  // Decimal as an invariant string ("1250.50") to avoid float rounding.
+  string amount = 5;
+  string currency = 6;
+  string counterparty = 7;
+  // yyyy-MM-dd, empty when the message has no date.
+  string date = 8;
+  string channel = 9;
+  string account_last4 = 10;
+  string balance = 11;
+}
+
+message ParseBatchReply {
+  repeated ParsedSms items = 1;
+}

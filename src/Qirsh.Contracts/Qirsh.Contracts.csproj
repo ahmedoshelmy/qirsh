@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Message contracts shared by the services. Additive changes only; protos are compiled by each API. -->
+</Project>

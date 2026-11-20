@@ -1,0 +1,26 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+*.trx
+# Node
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+# Flutter
+.dart_tool/
+build/
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+# IDE
+.idea/
+.vscode/
+*.swp

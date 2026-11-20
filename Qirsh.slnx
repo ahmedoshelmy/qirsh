@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Qirsh.Contracts/Qirsh.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Ingestion/">
+    <Project Path="src/Ingestion/Qirsh.Ingestion.Domain/Qirsh.Ingestion.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Qirsh.Ingestion.UnitTests/Qirsh.Ingestion.UnitTests.csproj" />
+  </Folder>
+</Solution>

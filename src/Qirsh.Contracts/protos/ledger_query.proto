@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Qirsh.Ledger.Grpc";
+
+package qirsh.ledger.v1;
+
+// Read-only queries other services ask the ledger synchronously.
+service LedgerQuery {
+  // Total spent (money out) in a category during a calendar month.
+  rpc GetMonthSpend (MonthSpendRequest) returns (MonthSpendReply);
+}
+
+message MonthSpendRequest {
+  string category = 1;
+  // yyyy-MM
+  string month = 2;
+  string currency = 3;
+}
+
+message MonthSpendReply {
+  // Decimal as an invariant string.
+  string spent = 1;
+  int32 transaction_count = 2;
+}
