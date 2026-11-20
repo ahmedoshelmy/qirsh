@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Ingestion\Qirsh.Ingestion.Domain\Qirsh.Ingestion.Domain.csproj" />
+  </ItemGroup>
+</Project>
