@@ -2,8 +2,8 @@ using System.Globalization;
 using Grpc.Core;
 using Qirsh.Ingestion.Grpc;
 using Qirsh.Ingestion.Infrastructure;
-using DomainParser = Qirsh.Ingestion.Domain.SmsParser;
 using DomainParsedSms = Qirsh.Ingestion.Domain.ParsedSms;
+using DomainParser = Qirsh.Ingestion.Domain.SmsParser;
 
 namespace Qirsh.Ingestion.Api;
 

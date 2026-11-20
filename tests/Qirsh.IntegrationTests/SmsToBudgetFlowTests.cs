@@ -94,6 +94,25 @@ public sealed class SmsToBudgetFlowTests(QirshServices stack)
         (await Budgets()).Single(b => b.Category == "Transport").Spent.ShouldBe(300m);
     }
 
+    [Fact]
+    public async Task Correcting_a_category_moves_budget_spend_and_teaches_the_merchant()
+    {
+        var budgets = stack.Budgets.CreateClient();
+        (await budgets.PostAsJsonAsync("/api/budgets", new { category = "Entertainment", limit = 500m, month = Month })).EnsureSuccessStatusCode();
+        (await PostSms($"HSBC: EGP 200.00 spent at ZOOM ARCADE on {SmsDate}")).Recorded.ShouldBe(1);
+        var first = await Eventually(async () => (await Transactions()).SingleOrDefault(t => t.Merchant == "ZOOM ARCADE"));
+        first.Category.ShouldBe("Uncategorised");
+
+        var moved = await stack.Ledger.CreateClient().PutAsJsonAsync($"/api/transactions/{first.Id}/category", new { category = "Entertainment" });
+        moved.EnsureSuccessStatusCode();
+
+        await Eventually(async () => (await Budgets()).SingleOrDefault(b => b.Category == "Entertainment" && b.Spent == 200m));
+        (await PostSms($"HSBC: EGP 50.00 spent at Zoom  Arcade on {SmsDate}. Avail Bal EGP 900.00")).Recorded.ShouldBe(1);
+        var second = await Eventually(async () => (await Transactions()).SingleOrDefault(t => t.Merchant == "Zoom Arcade"));
+        second.Category.ShouldBe("Entertainment");
+        await Eventually(async () => (await Budgets()).SingleOrDefault(b => b.Category == "Entertainment" && b.Spent == 250m));
+    }
+
     private async Task<IntakeResponse> PostSms(string text)
     {
         var response = await stack.Ingestion.CreateClient().PostAsJsonAsync("/api/sms", new { text });
