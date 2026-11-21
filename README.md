@@ -71,6 +71,20 @@ src/
 tests/        unit tests per context, architecture tests, Testcontainers integration tests
 ```
 
+## Run in Codespaces
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ahmedoshelmy/qirsh)
+
+The repo carries a dev container (`.devcontainer/`: .NET 10, Node 22, Docker-in-Docker), so it opens as-is in GitHub
+Codespaces or VS Code Dev Containers and restores the NuGet and npm packages on create. Then one command:
+
+```bash
+docker compose up -d --build --wait
+```
+
+Open the **Web** port (8080) from the Ports tab. The Ingestion (5101), Ledger (5201) and Budgets (5301) APIs and the
+RabbitMQ management UI (15672) are forwarded too. Prefix the command with `QIRSH_DEMO_DATA=true` for demo data.
+
 ## Quickstart
 
 Requirements: Docker (or Podman with the Docker CLI).

@@ -1,0 +1,26 @@
+{
+  "name": "Qirsh",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": { "version": "10.0" },
+    "ghcr.io/devcontainers/features/node:1": { "version": "22" },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "hostRequirements": { "cpus": 4, "memory": "8gb" },
+  "forwardPorts": [8080, 5101, 5201, 5301, 15672, 18888],
+  "portsAttributes": {
+    "8080": { "label": "Web", "onAutoForward": "openBrowser" },
+    "5101": { "label": "Ingestion API" },
+    "5201": { "label": "Ledger API" },
+    "5301": { "label": "Budgets API" },
+    "15672": { "label": "RabbitMQ management" },
+    "18888": { "label": "Aspire dashboard (--profile obs)" }
+  },
+  "otherPortsAttributes": { "onAutoForward": "silent" },
+  "postCreateCommand": "dotnet restore Qirsh.slnx && npm ci --prefix src/Web",
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-dotnettools.csdevkit", "ms-azuretools.vscode-docker", "dbaeumer.vscode-eslint"]
+    }
+  }
+}
