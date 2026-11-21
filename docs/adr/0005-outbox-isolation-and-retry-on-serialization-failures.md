@@ -50,7 +50,10 @@ lab) reproduced it on unfixed `main`: after 60 s only 196 of 200 reached the led
 
 - `BurstIntakeTests` passes: all 200 SMS reach the ledger, no `_error` queue has a message, and the sum of rule hit
   counters is at least 200 (no lost increments).
-- Re-measured with the lab's cold-start ramp: see "After the fix" in the lab's `docs/load-testing.md`.
+- Re-measured with the lab's cold-start 2 → 40 req/s ramp, twice ("After the fix" in the lab's
+  `docs/load-testing.md`): outbox backlog peak 8 and 3 (was 1,990), 0 `40001` log lines (was 1,668), nothing
+  dead-lettered, every SMS in the ledger by the time k6 stopped (was 1,155 of 3,079 a minute later), send-to-consume
+  p95 243 and 71 ms (was over 10 s). The second run's ledger retried 18 account-opening `23505` races, all recorded.
 - Any new read-modify-write on a shared row must be atomic SQL or carry a concurrency token; read committed will not
   catch it. The architecture tests do not enforce this; code review must.
 - A message that keeps losing races for 8 attempts (about 7 s) still goes to `_error`, so a real contention bug
