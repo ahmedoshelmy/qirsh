@@ -33,6 +33,14 @@ internal sealed class FakeLedger : IAccountRepository, ITransactionRepository, I
 
     public void Add(MerchantRule rule) => Rules.Add(rule);
 
+    public Dictionary<Guid, int> RuleHits { get; } = [];
+
+    public Task RecordHitAsync(Guid ruleId, CancellationToken ct)
+    {
+        RuleHits[ruleId] = RuleHits.GetValueOrDefault(ruleId) + 1;
+        return Task.CompletedTask;
+    }
+
     public Task SaveChangesAsync(CancellationToken ct)
     {
         Saves++;

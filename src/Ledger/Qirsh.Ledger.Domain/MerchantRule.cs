@@ -32,8 +32,6 @@ public sealed class MerchantRule
     /// <summary>The owner corrected this merchant again: the latest correction wins.</summary>
     public void Relearn(string category) => Category = category;
 
-    public void MarkApplied() => TimesApplied++;
-
     public bool Matches(string merchantKey) => Source == RuleSource.Learned
         ? string.Equals(Pattern, merchantKey, StringComparison.Ordinal)
         : $" {merchantKey} ".Contains($" {Pattern} ", StringComparison.Ordinal) || merchantKey.StartsWith(Pattern, StringComparison.Ordinal);

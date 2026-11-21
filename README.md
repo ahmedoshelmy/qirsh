@@ -127,7 +127,7 @@ cd src/Web && npm test
 The integration tests start Postgres and RabbitMQ in containers, host the three services in-process and check
 the main flow end to end: an SMS posted to Ingestion becomes a Ledger transaction, updates the budget and arrives
 as a SignalR alert; a duplicate SMS stays one transaction; a budget created after spending is back-filled over gRPC
-and not double counted.
+and not double counted; a burst of 200 concurrent SMS all reach the ledger with nothing dead-lettered (ADR 5).
 
 ## API sketch
 
@@ -170,6 +170,14 @@ Errors are RFC 7807 `ProblemDetails`. `/health/live` and `/health/ready` (databa
    on request. No new tables, no background job, nothing to keep in sync — and every rule is a unit test.
 7. **Transport switch.** `Messaging__Transport=RabbitMq|AzureServiceBus` — same consumers, same outbox; RabbitMQ
    locally, Service Bus in Azure.
+8. **A bottleneck found by load testing, fixed with a test first.** The
+   [observability lab](https://github.com/ahmedoshelmy/observability-lab) ramped intake to 40 req/s from a cold
+   start: HTTP stayed green while thousands of rows sat in the outbox and some SMS were dead-lettered. Logs and traces
+   pointed at Postgres 40001 serialization failures: MassTransit's outbox defaults to repeatable read, and every
+   ledger consumer bumped the same few merchant-rule counters. A 200-SMS concurrent burst test reproduced it
+   (196/200, 4 dead-lettered); the fix is read committed, an atomic `TimesApplied + 1` instead of a lost-update-prone
+   read-modify-write, and a jittered retry for lost races. Partitioning by account was considered and rejected: the
+   hot rows were rules, not accounts. ([ADR 5](docs/adr/0005-outbox-isolation-and-retry-on-serialization-failures.md))
 
 ## Azure (optional)
 

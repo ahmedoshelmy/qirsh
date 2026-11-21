@@ -1,3 +1,4 @@
+using System.Data;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,10 +33,31 @@ public static class MessagingExtensions
                 o.UsePostgres(enableSchemaCaching: false);
                 o.UseBusOutbox();
                 o.QueryDelay = options.OutboxQueryDelay;
+
+                // MassTransit's default is RepeatableRead. In Postgres a repeatable-read transaction that locks or
+                // updates a row changed after its snapshot fails with 40001 instead of waiting, so under a burst the
+                // outbox sweep and concurrent consumers kept failing and backing off (ADR 5). Read committed waits on
+                // the row lock instead; the outbox uses FOR UPDATE (SKIP LOCKED) and the inbox key, unique indexes
+                // and atomic counter updates keep the business writes correct at this level.
+                o.IsolationLevel = IsolationLevel.ReadCommitted;
             });
             x.AddConfigureEndpointsCallback((context, _, endpoint) =>
             {
-                endpoint.UseMessageRetry(r => r.Intervals(100, 500, 2000));
+                // Outer: anything else gets three tries, but transient database conflicts are left to the inner policy
+                // instead of being retried 3 x 8 times.
+                endpoint.UseMessageRetry(r =>
+                {
+                    r.Ignore<Exception>(TransientDatabaseFailure.Is);
+                    r.Intervals(100, 500, 2000);
+                });
+
+                // Inner: a lost race (serialization failure, deadlock, concurrent insert of the same key, optimistic
+                // concurrency) is retried quickly with jittered exponential back-off, so it never reaches _error.
+                endpoint.UseMessageRetry(r =>
+                {
+                    r.Handle<Exception>(TransientDatabaseFailure.Is);
+                    r.Exponential(8, TimeSpan.FromMilliseconds(20), TimeSpan.FromSeconds(2), TimeSpan.FromMilliseconds(50));
+                });
                 endpoint.UseEntityFrameworkOutbox<TDbContext>(context);
             });
             configureConsumers?.Invoke(x);

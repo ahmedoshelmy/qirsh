@@ -35,6 +35,9 @@ internal sealed class MerchantRuleRepository(LedgerDbContext db) : IMerchantRule
     public async Task<IReadOnlyList<MerchantRule>> ListAsync(CancellationToken ct) => await db.MerchantRules.ToListAsync(ct);
 
     public void Add(MerchantRule rule) => db.MerchantRules.Add(rule);
+
+    public Task RecordHitAsync(Guid ruleId, CancellationToken ct) =>
+        db.MerchantRules.Where(r => r.Id == ruleId).ExecuteUpdateAsync(s => s.SetProperty(r => r.TimesApplied, r => r.TimesApplied + 1), ct);
 }
 
 internal sealed class UnitOfWork(LedgerDbContext db) : IUnitOfWork

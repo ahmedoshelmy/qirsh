@@ -31,6 +31,16 @@ public sealed class LedgerHandlerTests
     }
 
     [Fact]
+    public async Task A_matching_rule_hit_is_counted_through_the_atomic_increment_and_only_for_new_transactions()
+    {
+        await Recorder().HandleAsync(Sms("H1", "CARREFOUR MAADI"), default);
+        await Recorder().HandleAsync(Sms("H1", "CARREFOUR MAADI"), default);
+        await Recorder().HandleAsync(Sms("H2", "UNKNOWN SHOP"), default);
+
+        _ledger.RuleHits.ShouldHaveSingleItem().ShouldBe(new KeyValuePair<Guid, int>(_ledger.Rules[0].Id, 1));
+    }
+
+    [Fact]
     public async Task The_same_sms_on_the_same_account_is_recorded_once()
     {
         await Recorder().HandleAsync(Sms("H1", "CARREFOUR MAADI"), default);

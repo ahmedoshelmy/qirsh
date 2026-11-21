@@ -28,6 +28,10 @@ public sealed class QirshServices : IAsyncLifetime
     public WebApplicationFactory<LedgerQueryGrpcService> Ledger { get; private set; } = null!;
     public WebApplicationFactory<AlertsHub> Budgets { get; private set; } = null!;
 
+    public string PostgresConnectionString => _postgres.GetConnectionString();
+
+    public string RabbitMqConnectionString => _rabbit.GetConnectionString();
+
     public async Task InitializeAsync()
     {
         await Task.WhenAll(_postgres.StartAsync(), _rabbit.StartAsync());

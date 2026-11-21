@@ -30,7 +30,6 @@ public sealed class RecordTransactionFromSms(
 
         var direction = sms.Direction == MoneyDirection.In ? Direction.In : Direction.Out;
         var resolution = CategoryResolver.Resolve(MerchantKey.From(sms.Counterparty), direction, sms.Channel, await rules.ListAsync(ct));
-        resolution.Rule?.MarkApplied();
 
         var transaction = Transaction.Record(
             new Transaction.NewTransaction(
@@ -51,6 +50,13 @@ public sealed class RecordTransactionFromSms(
         await events.PublishAsync(
             new TransactionRecorded(transaction.Id, account.Id, sms.Direction, transaction.Amount, transaction.Currency, transaction.Category, transaction.Merchant, transaction.OccurredOn),
             ct);
+
+        // Last, so the row lock on a popular rule is held for as short a time as possible before commit.
+        if (resolution.Rule is { } rule)
+        {
+            await rules.RecordHitAsync(rule.Id, ct);
+        }
+
         await unitOfWork.SaveChangesAsync(ct);
         return RecordOutcome.Recorded;
     }

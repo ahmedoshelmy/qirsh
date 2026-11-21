@@ -30,6 +30,13 @@ public interface IMerchantRuleRepository
     Task<IReadOnlyList<MerchantRule>> ListAsync(CancellationToken ct);
 
     void Add(MerchantRule rule);
+
+    /// <summary>
+    /// Counts one more use of the rule as a single atomic increment in the current transaction. Every SMS for a
+    /// popular merchant hits the same row, so a read-modify-write here would lose updates (read committed) or fail
+    /// with serialization errors (repeatable read) under concurrent consumers.
+    /// </summary>
+    Task RecordHitAsync(Guid ruleId, CancellationToken ct);
 }
 
 /// <summary>Commits the business change and the outgoing integration events (outbox rows) atomically.</summary>
