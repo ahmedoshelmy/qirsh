@@ -103,8 +103,14 @@ Demo data: set `QIRSH_DEMO_DATA=true` in `.env` before the first start to ingest
 
 ### Local development
 
+Compose keeps Postgres and RabbitMQ on its internal network, so for services run on the host start both with
+published ports and the credentials in the services' `appsettings.json` (`qirsh` / `qirsh`):
+
 ```bash
-docker compose up -d postgres rabbitmq
+docker run -d --name qirsh-pg -p 5432:5432 \
+  -e POSTGRES_DB=qirsh -e POSTGRES_USER=qirsh -e POSTGRES_PASSWORD=qirsh postgres:17-alpine
+docker run -d --name qirsh-mq -p 5672:5672 -p 15672:15672 \
+  -e RABBITMQ_DEFAULT_USER=qirsh -e RABBITMQ_DEFAULT_PASS=qirsh rabbitmq:4-management-alpine
 dotnet run --project src/Ledger/Qirsh.Ledger.Api        # :5201 REST, :5202 gRPC
 dotnet run --project src/Ingestion/Qirsh.Ingestion.Api  # :5101 REST, :5102 gRPC
 dotnet run --project src/Budgets/Qirsh.Budgets.Api      # :5301
